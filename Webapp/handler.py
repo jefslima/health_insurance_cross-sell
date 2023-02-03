@@ -1,5 +1,8 @@
 import pickle
 import pandas as pd
+import os
+import sys
+
 from flask import Flask, request, Response
 from healthinsurance.HealthInsurance import HealthInsurance
 
@@ -42,4 +45,6 @@ def health_insurance_predict():
         return Response( '{}', status=200, mimetype='application/json' )
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    port= os.environ.get('PORT',5000)
+    app.run(host='0.0.0.0',port=port)
+    #app.run(host='0.0.0.0') Run Local
