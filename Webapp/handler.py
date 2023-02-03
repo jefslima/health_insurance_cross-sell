@@ -4,7 +4,8 @@ from flask import Flask, request, Response
 from healthinsurance.HealthInsurance import HealthInsurance
 
 # loading model
-model = pickle.load( open('/Users/jefersonlima/GitHub/pa004_health_insurance_cross_sell/health_insurance_cross-sell/src/models/knn_model_regression.pkl', 'rb' ) )
+#model = pickle.load( open('/Users/jefersonlima/GitHub/pa004_health_insurance_cross_sell/health_insurance_cross-sell/src/models/knn_model_regression.pkl', 'rb' ) )
+model = pickle.load(open('model/knn_model_regression.pkl', 'rb') )
 
 # initialize API
 app = Flask( __name__ )
