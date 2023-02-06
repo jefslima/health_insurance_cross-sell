@@ -5,18 +5,20 @@ import pandas as pd
 class HealthInsurance( object ):
 
     def __init__( self ):
-       #self.home_path ='/Users/jefersonlima/GitHub/pa004_health_insurance_cross_sell/health_insurance_cross-sell/'
-        self.annual_premium_scaler =                   pickle.load( open( 'features/annual_premium_scaler.pkl', 'rb'  ) )
+        state = 1
+        #self.home_path ='/Users/jefersonlima/GitHub/pa004_health_insurance_cross_sell/health_insurance_cross-sell/'
+        self.annual_premium_scaler =                   pickle.load( open('features/annual_premium_scaler.pkl', 'rb'  ) )
         self.age_scaler =                              pickle.load( open( 'features/age_scaler.pkl', 'rb'   ) )
         self.vintage_scaler =                          pickle.load( open( 'features/vintage_scaler.pkl', 'rb'   ) )
-        self.target_encode_gender_scaler =             pickle.load( open( 'features/target_encode_gender_scaler.pkl', 'rb'   ) )
-        self.target_encode_region_code_scaler =        pickle.load( open( 'features/target_encode_region_code_scaler.pkl', 'rb'   ) )
-        self.fe_policy_sales_channel_scaler =          pickle.load( open( 'features/fe_policy_sales_channel_scaler.pkl', 'rb'   ) )
-
+        self.target_encode_gender =             pickle.load( open( 'features/target_encode_gender_scaler.pkl', 'rb'   ) )
+        self.target_encode_region_code =        pickle.load( open( 'features/target_encode_region_code_scaler.pkl', 'rb'   ) )
+        self.fe_policy_sales_channel =          pickle.load( open( 'features/fe_policy_sales_channel_scaler.pkl', 'rb'   ) )
 
     def data_cleaning( self, df1 ):
         # 1.1. Rename Columns
-        cols_new = ['id', 'gender', 'age', 'driving_license', 'region_code', 'previously_insured', 'vehicle_age', 'vehicle_damage', 'annual_premium', 'policy_sales_channel','vintage']
+        cols_new = ['id', 'gender', 'age', 'driving_license', 'region_code', 'previously_insured', 'vehicle_age',
+                    'vehicle_damage', 'annual_premium', 'policy_sales_channel', 'vintage', 'response']
+
         # rename
         df1.columns = cols_new
 
@@ -34,6 +36,7 @@ class HealthInsurance( object ):
 
         return df2
 
+
     def data_preparation( self, df5 ):
         # anual premium - StandarScaler
         df5['annual_premium'] = self.annual_premium_scaler.transform( df5[['annual_premium']].values )
@@ -45,19 +48,19 @@ class HealthInsurance( object ):
         df5['vintage'] = self.vintage_scaler.transform( df5[['vintage']].values )
 
         # gender - One Hot Encoding / Target Encoding
-        df5.loc[:, 'gender'] = df5['gender'].map( self.target_encode_gender_scaler )
+        df5.loc[:, 'gender'] = df5['gender'].map( self.target_encode_gender )
 
         # region_code - Target Encoding / Frequency Encoding
-        df5.loc[:, 'region_code'] = df5['region_code'].map( self.target_encode_region_code_scaler )
+        df5.loc[:, 'region_code'] = df5['region_code'].map( self.target_encode_region_code )
 
         # vehicle_age - One Hot Encoding / Frequency Encoding
         df5 = pd.get_dummies( df5, prefix='vehicle_age', columns=['vehicle_age'] )
 
         # policy_sales_channel - Target Encoding / Frequency Encoding
-        df5.loc[:, 'policy_sales_channel'] = df5['policy_sales_channel'].map( self.fe_policy_sales_channel_scaler )
+        df5.loc[:, 'policy_sales_channel'] = df5['policy_sales_channel'].map( self.fe_policy_sales_channel )
 
         # Feature Selection
-        cols_selected = ['annual_premium', 'vintage', 'age', 'region_code','vehicle_damage']
+        cols_selected = ['annual_premium', 'vintage', 'age', 'region_code', 'vehicle_damage', 'previously_insured', 'policy_sales_channel']
 
         return df5[ cols_selected ]
 
