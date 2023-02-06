@@ -6,7 +6,7 @@ from healthinsurance.HealthInsurance import HealthInsurance
 
 # loading model
 #model = pickle.load( open('/Users/jefersonlima/GitHub/pa004_health_insurance_cross_sell/health_insurance_cross-sell/src/models/knn_model_regression.pkl', 'rb' ) )
-model = pickle.load( open('models/knn_model_regression.pkl', 'rb' ) )
+model = pickle.load( open('models/lr_model_regression.pkl', 'rb' ) )
 
 # initialize API
 app = Flask( __name__ )
